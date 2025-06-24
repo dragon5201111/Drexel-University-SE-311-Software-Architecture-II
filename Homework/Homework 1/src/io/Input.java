@@ -1,4 +1,4 @@
-package input;
+package io;
 
 public interface Input {
 }
