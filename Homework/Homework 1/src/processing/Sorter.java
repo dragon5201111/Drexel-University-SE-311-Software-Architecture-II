@@ -1,7 +1,9 @@
 package processing;
 
+import io.Line;
+
 import java.util.List;
 
 public interface Sorter {
-    List<String> sortLines(List<String> lines);
+    List<Line> sortLines(List<Line> lines);
 }
