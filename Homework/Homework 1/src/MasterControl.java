@@ -1,4 +1,6 @@
+import io.ConsoleOutput;
 import io.Input;
+import io.Output;
 import io.TextInput;
 import line.LineStorage;
 import process.AlphabeticalSorter;
@@ -13,6 +15,7 @@ public class MasterControl {
                             "test\\lines.txt";
         LineStorage lineStorage = new LineStorage();
         Input input = new TextInput();
+        Output output = new ConsoleOutput();
         input.readLines(filename, lineStorage);
 
         Shifter shifter = new Shifter(lineStorage);

@@ -22,9 +22,8 @@ public class Shifter {
     }
 
     private void populateShiftedLines() {
-        List<String> originalLines = this.lineStorage.getLines();
-
-        for(int i = 0; i < originalLines.size(); i++) {
+        int lineCount = this.lineStorage.getLineCount();
+        for(int i = 0; i < lineCount; i++) {
             int wordCount = this.lineStorage.getWordCount(i);
 
             for (int j = 0; j < wordCount; j++) {

@@ -16,8 +16,8 @@ public class LineStorage {
         this.lines.add(line);
     }
 
-    public List<String> getLines() {
-        return this.lines;
+    public int getLineCount() {
+        return this.lines.size();
     }
 
     public void addWord(int lineNumber,String word) {
@@ -26,8 +26,6 @@ public class LineStorage {
         }
         this.lineWords.get(lineNumber).add(word);
     }
-
-
 
     public int getWordCount(int lineNumber) {
         return this.lineWords.get(lineNumber).size();
