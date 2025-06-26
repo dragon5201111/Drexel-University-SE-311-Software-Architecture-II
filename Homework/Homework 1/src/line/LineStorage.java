@@ -4,20 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LineStorage {
-    private final List<String> lines;
     private final List<List<String>> lineWords;
+    private String wordDelimiter;
 
     public LineStorage() {
-        this.lines = new ArrayList<>();
         this.lineWords = new ArrayList<>();
     }
 
-    public void addLine(String line) {
-        this.lines.add(line);
-    }
-
     public int getLineCount() {
-        return this.lines.size();
+        return this.lineWords.size();
     }
 
     public void addWord(int lineNumber,String word) {
@@ -33,6 +28,14 @@ public class LineStorage {
 
     public String getWord(int lineNumber, int wordIndex) {
         return this.lineWords.get(lineNumber).get(wordIndex);
+    }
+
+    public void setWordDelimiter(String wordDelimiter) {
+        this.wordDelimiter = wordDelimiter;
+    }
+
+    public String getLine(int lineNumber) {
+        return String.join(this.wordDelimiter, this.lineWords.get(lineNumber));
     }
 
 }

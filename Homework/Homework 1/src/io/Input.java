@@ -1,31 +1,31 @@
 package io;
 
 import line.LineStorage;
-
 import java.io.File;
-import java.util.List;
 import java.util.Scanner;
+import java.util.List;
 
 public abstract class Input {
-    public void readLines(String filename, LineStorage lineStorage){
+    public void readLines(String fileName, LineStorage lineStorage){
         try{
-            Scanner scanner = new Scanner(new File(filename));
-            for(int i = 0; scanner.hasNextLine(); i++){
-                String text = scanner.nextLine();
-                List<String> words = this.parseLineText(text);
+            Scanner scanner = new Scanner(new File(fileName));
+            for(int lineNumber = 0; scanner.hasNextLine(); lineNumber++){
+                String rawText = scanner.nextLine();
+                List<String> parsedWords = this.parseWords(rawText);
 
-                lineStorage.addLine(text);
-                this.addWordsToLineStorage(i, lineStorage, words);
+                this.setWordDelimiter(lineStorage);
+                this.addWords(lineNumber, parsedWords, lineStorage);
             }
         }catch (Exception _){
         }
     }
 
-    private void addWordsToLineStorage(int lineNumber,LineStorage lineStorage, List<String> words){
-        for(String word : words){
+    private void addWords(int lineNumber, List<String> parsedWords, LineStorage lineStorage){
+        for(String word : parsedWords){
             lineStorage.addWord(lineNumber, word);
         }
     }
 
-    abstract List<String> parseLineText(String text);
+    abstract void setWordDelimiter(LineStorage lineStorage);
+    abstract List<String> parseWords(String text);
 }
