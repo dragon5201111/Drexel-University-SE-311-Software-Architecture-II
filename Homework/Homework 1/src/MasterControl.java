@@ -1,10 +1,7 @@
 import io.Input;
 import io.TextInput;
 import line.LineStorage;
-import process.AlphabeticalSorter;
-import process.KeywordSearch;
-import process.Shifter;
-import process.Sorter;
+import process.*;
 
 public class MasterControl {
     public static void main(String[] args) {
@@ -29,6 +26,10 @@ public class MasterControl {
 
         System.out.println("------------------------");
 
+        Indexer indexer = new GenericIndexer(lineStorage);
+        for(String indexedWord : indexer.getIndexedWords()){
+            System.out.println(indexedWord);
+        }
 
     }
 }

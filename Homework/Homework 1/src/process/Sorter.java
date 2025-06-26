@@ -24,7 +24,7 @@ public abstract class Sorter {
         int sortedSize = sortedLines.size();
         for(int i = 0; i < sortedSize; i++){
             String currentLine = sortedLines.get(i);
-            String formattedLine = String.format("%s %s", String.format("[%07d]", i+1), currentLine);
+            String formattedLine = "[" + (i + 1) + "] " + currentLine;
             this.sortedLines.set(i, formattedLine);
         }
     }

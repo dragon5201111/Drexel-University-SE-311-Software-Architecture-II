@@ -34,7 +34,7 @@ public class Shifter {
                     shiftedLine.append(word).append(" ");
                 }
 
-                this.shiftedLines.add(String.format("%-100s %s", shiftedLine, String.format("[%07d]", i+1)));
+                this.shiftedLines.add(shiftedLine + " [" + (i + 1) + "]");
             }
 
         }

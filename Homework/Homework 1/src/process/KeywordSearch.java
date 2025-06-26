@@ -10,7 +10,7 @@ public class KeywordSearch {
 
     public KeywordSearch(LineStorage lineStorage) {
         this.lineStorage = lineStorage;
-        this.keywords = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.keywords = new HashMap<>();
     }
 
     public List<String> getKeywordLines(String keyword){
