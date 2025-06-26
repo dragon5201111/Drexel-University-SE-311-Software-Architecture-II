@@ -37,5 +37,4 @@ public class LineStorage {
     public String getLine(int lineNumber) {
         return String.join(this.wordDelimiter, this.lineWords.get(lineNumber));
     }
-
 }

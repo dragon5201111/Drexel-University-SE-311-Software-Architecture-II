@@ -2,10 +2,7 @@ package process;
 
 import line.LineStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KeywordSearch {
     private final LineStorage lineStorage;
@@ -13,7 +10,7 @@ public class KeywordSearch {
 
     public KeywordSearch(LineStorage lineStorage) {
         this.lineStorage = lineStorage;
-        this.keywords = new HashMap<>();
+        this.keywords = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 
     public List<String> getKeywordLines(String keyword){
@@ -37,5 +34,4 @@ public class KeywordSearch {
             }
         }
     }
-
 }

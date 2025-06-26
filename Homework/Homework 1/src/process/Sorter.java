@@ -15,9 +15,18 @@ public abstract class Sorter {
     public List<String> getSortedLines() {
         if(this.sortedLines.isEmpty()){
             this.sortedLines = this.generateSortedLines(shifter.getShiftedLines());
+            this.prependIndexIntoSortedLines();
         }
         return this.sortedLines;
     }
 
+    private void prependIndexIntoSortedLines(){
+        int sortedSize = sortedLines.size();
+        for(int i = 0; i < sortedSize; i++){
+            String currentLine = sortedLines.get(i);
+            String formattedLine = String.format("%s %s", String.format("[%07d]", i+1), currentLine);
+            this.sortedLines.set(i, formattedLine);
+        }
+    }
     abstract protected List<String> generateSortedLines(List<String> lines);
 }

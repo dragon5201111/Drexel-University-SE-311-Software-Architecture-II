@@ -32,12 +32,9 @@ public class Shifter {
                 for (int k = 0; k < wordCount; k++) {
                     String word = this.lineStorage.getWord(i, (j + k) % wordCount);
                     shiftedLine.append(word).append(" ");
-                    if (k == wordCount - 1) {
-                        shiftedLine.append(i + 1);
-                    }
                 }
 
-                this.shiftedLines.add(shiftedLine.toString());
+                this.shiftedLines.add(String.format("%-100s %s", shiftedLine, String.format("[%07d]", i+1)));
             }
 
         }
