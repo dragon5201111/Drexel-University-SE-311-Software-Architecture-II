@@ -32,6 +32,7 @@ public class Main {
         commandInvoker.addCommand(new KeywordSearchCommand(keywordSearch, output));
         commandInvoker.addCommand(new SorterCommand(sorter, output));
         commandInvoker.addCommand(new IndexerCommand(indexer, output));
+        commandInvoker.addCommand(new ExitCommand());
 
         return commandInvoker;
     }
@@ -56,19 +57,12 @@ public class Main {
     }
 
     private static void run(CommandInvoker commandInvoker) {
-        boolean exit;
-
-        do{
-            commandInvoker.displayCommands();
-            int commandIndex = Main.getInt(commandInvoker.getNumberOfCommands());
-            commandInvoker.execute(commandIndex);
-            System.out.println();
-            exit = Main.exit();
-        }while (!exit);
-    }
-    private static boolean exit(){
-        System.out.print("Do you want to exit? (y/n): ");
-        return Main.SCANNER.nextLine().trim().equalsIgnoreCase("y");
+       while (true) {
+           commandInvoker.displayCommands();
+           int commandIndex = Main.getInt(commandInvoker.getNumberOfCommands());
+           commandInvoker.execute(commandIndex);
+           System.out.println();
+       }
     }
 
     private static int getInt(int max) {
