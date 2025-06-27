@@ -1,0 +1,9 @@
+1.) I used a LineStorage object to store the lines read from the input file. This structure manages the original lines read and
+offers methods to retrieve the read lines and words. Its contents are determined by the Input (interface) readLines method.
+
+2.) I used a Shifter object to store circular shifted lines. The shifter aggregates the LineStorage class. It uses LineStorage's
+methods to build the shifted lines. Since LineStorage contains the original lines, the indexes are maintained and hence are appended
+to the end of the shifted lines respectively.
+
+3.) I used a Sorter (Interface) object. This object aggregates the Shifter object, and calls the shifter's method to retrieve
+the shifted lines. It then sorts them by implementation (in the case of this assignment, alphabetically).
