@@ -18,7 +18,7 @@ public class KeywordSearch {
             this.populateKeywords();
         }
 
-        return this.keywords.get(keyword);
+        return this.keywords.getOrDefault(keyword, new ArrayList<>());
     }
 
     private void populateKeywords(){
@@ -30,8 +30,14 @@ public class KeywordSearch {
                 String word = this.lineStorage.getWord(i, j);
                 this.keywords
                         .computeIfAbsent(word, k -> new ArrayList<>())
-                        .add(line);
+                        .add(this.constructHighlightedLine(line, word));
             }
         }
+    }
+
+    private String constructHighlightedLine(String line, String keyword){
+        int keywordIndex = line.indexOf(keyword);
+        int keywordLength = keyword.length();
+        return line.substring(0, keywordIndex) + "[" + line.substring(keywordIndex, keywordIndex + keywordLength) + "]" + line.substring(keywordIndex + keywordLength);
     }
 }
