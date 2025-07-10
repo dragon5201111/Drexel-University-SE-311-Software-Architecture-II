@@ -44,7 +44,7 @@ public class OptionReader {
 		String value = OptionReader.userOptions.get(keyStr);
 
 		// If the value is itself a key, resolve it recursively
-		if (userOptions.containsKey(value)) {
+		if (OptionReader.userOptions.containsKey(value)) {
 			return OptionReader.getString(value);
 		}
 

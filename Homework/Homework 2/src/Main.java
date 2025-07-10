@@ -38,7 +38,7 @@ public class Main {
 
         String outputFileName = OptionReader.getString("OutputFileName");
         Output output = (Output) OptionReader.getObjectFromStr(OptionReader.getString("Output"));
-        output.writeLines(keywordSearch.getKeywordLines("se311"), outputFileName);
+        output.writeLines(indexer.getIndexedWords(), outputFileName);
     }
 
 }
