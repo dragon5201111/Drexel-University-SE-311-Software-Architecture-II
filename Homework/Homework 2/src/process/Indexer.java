@@ -21,7 +21,7 @@ public abstract class Indexer {
         return this.indexedWords;
     }
 
-    public void populateIndexedWords() {
+    private void populateIndexedWords() {
         Map<String, Set<Integer>> indexedWords = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         int lineCount = this.lineStorage.getLineCount();
