@@ -1,6 +1,7 @@
 package resources;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OptionReader {
 	private static HashMap<String, String> userOptions = null;
@@ -34,13 +35,30 @@ public class OptionReader {
 	public static Object getObjectFromStr(String objStr) {
 		return kwicObjLoader.loadObject(objStr);
 	}
-	
+
 	public static String getString(String keyStr) {
-		String valueStr = "";
-		if (userOptions.containsKey(keyStr)) {			
-			valueStr = userOptions.get(keyStr);			
+		if (!OptionReader.userOptions.containsKey(keyStr)) {
+			throw new NoSuchElementException(keyStr);
 		}
-		return valueStr;
+
+		String value = OptionReader.userOptions.get(keyStr);
+
+		// If the value is itself a key, resolve it recursively
+		if (userOptions.containsKey(value)) {
+			return OptionReader.getString(value);
+		}
+
+		return value;
+	}
+
+	public static Set<String> getStringSet(String keyStr) {
+		// Assumes value for key is in format of: "a,b,c,..."
+		return Arrays.stream(OptionReader.getString(keyStr)
+						.split(","))
+				.map(String::trim)
+				.map(s -> s.replaceAll("^\"|\"$", ""))  // remove leading/trailing quotes
+				.filter(s -> !s.isEmpty())
+				.collect(Collectors.toSet());
 	}
 
 }

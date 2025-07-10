@@ -2,18 +2,16 @@ package process;
 
 import line.LineStorage;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FilterIndexerDecorator extends IndexerDecorator {
-    private final Set<String> filterWords;
+    private Set<String> filterWords;
 
-    public FilterIndexerDecorator(LineStorage lineStorage, Indexer indexer, List<String> filterWords) {
-        super(lineStorage, indexer);
-        this.filterWords = filterWords.stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
+    public FilterIndexerDecorator(LineStorage lineStorage, Indexer indexer, Comparator<String> sortingOrder) {
+        super(lineStorage, indexer,sortingOrder);
     }
 
 
@@ -25,6 +23,12 @@ public class FilterIndexerDecorator extends IndexerDecorator {
                         .stream()
                         .noneMatch(filterWord -> word.toLowerCase().contains(filterWord)))
                 .collect(Collectors.toList());
+    }
+
+    public void setFilterWords(Set<String> filterWords) {
+        this.filterWords = filterWords.stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
     }
 
 }

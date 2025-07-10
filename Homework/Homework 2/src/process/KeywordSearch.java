@@ -13,31 +13,56 @@ public class KeywordSearch {
         this.keywords = new HashMap<>();
     }
 
-    public List<String> getKeywordLines(String keyword){
-        if (this.keywords.isEmpty()){
+    public List<String> getKeywordLines(String keyword) {
+        if (this.keywords.isEmpty()) {
             this.populateKeywords();
         }
 
-        return this.keywords.getOrDefault(keyword, new ArrayList<>());
+        return this.keywords.getOrDefault(keyword.toLowerCase(), new ArrayList<>());
     }
 
-    private void populateKeywords(){
-        for (int i = 0; i < this.lineStorage.getLineCount(); i++){
-            int wordCount = this.lineStorage.getWordCount(i);
-            String line = this.lineStorage.getLine(i);
+    private void populateKeywords() {
+        Map<String, Set<String>> tempKeywordMap = new HashMap<>();
 
-            for (int j = 0; j < wordCount; j++){
+        for (int i = 0; i < this.lineStorage.getLineCount(); i++) {
+            String line = this.lineStorage.getLine(i);
+            Set<String> seenWords = new HashSet<>();
+
+            int wordCount = this.lineStorage.getWordCount(i);
+            for (int j = 0; j < wordCount; j++) {
                 String word = this.lineStorage.getWord(i, j);
-                this.keywords
-                        .computeIfAbsent(word, k -> new ArrayList<>())
-                        .add(this.constructHighlightedLine(line, word));
+                String lowerWord = word.toLowerCase();
+
+                if (seenWords.contains(lowerWord)) continue;
+                seenWords.add(lowerWord);
+
+                String highlighted = this.constructHighlightedLine(line, word);
+                tempKeywordMap
+                        .computeIfAbsent(lowerWord, k -> new LinkedHashSet<>())
+                        .add(highlighted);
             }
+        }
+
+        for (Map.Entry<String, Set<String>> entry : tempKeywordMap.entrySet()) {
+            this.keywords.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
     }
 
-    private String constructHighlightedLine(String line, String keyword){
-        int keywordIndex = line.indexOf(keyword);
-        int keywordLength = keyword.length();
-        return line.substring(0, keywordIndex) + "[" + line.substring(keywordIndex, keywordIndex + keywordLength) + "]" + line.substring(keywordIndex + keywordLength);
+    private String constructHighlightedLine(String line, String keyword) {
+        StringBuilder result = new StringBuilder();
+        String lowerLine = line.toLowerCase();
+        String lowerKeyword = keyword.toLowerCase();
+
+        int index = 0;
+        int matchIndex;
+
+        while ((matchIndex = lowerLine.indexOf(lowerKeyword, index)) != -1) {
+            result.append(line, index, matchIndex);
+            result.append("[").append(line, matchIndex, matchIndex + keyword.length()).append("]");
+            index = matchIndex + keyword.length();
+        }
+
+        result.append(line.substring(index));
+        return result.toString();
     }
 }

@@ -7,41 +7,38 @@ import java.util.*;
 public abstract class Indexer {
     private final LineStorage lineStorage;
     private final List<String> indexedWords;
+    private final Comparator<String> sortingOrder;
 
-    public Indexer(LineStorage lineStorage) {
+    public Indexer(LineStorage lineStorage, Comparator<String> sortingOrder) {
         this.lineStorage = lineStorage;
         this.indexedWords = new ArrayList<>();
+        this.sortingOrder = sortingOrder;
     }
 
     public List<String> getIndexedWords() {
-        if(this.indexedWords.isEmpty()) {
+        if (this.indexedWords.isEmpty()) {
             this.populateIndexedWords();
         }
-
-        return this.indexedWords;
+        return Collections.unmodifiableList(this.indexedWords);
     }
 
     private void populateIndexedWords() {
-        Map<String, Set<Integer>> indexedWords = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        Map<String, Set<Integer>> indexMap = new HashMap<>();
 
-        int lineCount = this.lineStorage.getLineCount();
-
-        for(int i = 0; i < lineCount; i++) {
-            int wordCount = this.lineStorage.getWordCount(i);
-
-            for(int j = 0; j < wordCount; j++) {
-                String word = this.lineStorage.getWord(i, j);
-                indexedWords.computeIfAbsent(word, k -> new HashSet<>());
-                indexedWords.get(word).add(i+1);
+        int lineCount = lineStorage.getLineCount();
+        for (int i = 0; i < lineCount; i++) {
+            int wordCount = lineStorage.getWordCount(i);
+            for (int j = 0; j < wordCount; j++) {
+                String word = lineStorage.getWord(i, j);
+                indexMap.computeIfAbsent(word, k -> new HashSet<>()).add(i + 1);
             }
         }
 
-        for(Map.Entry<String, Set<Integer>> entry : indexedWords.entrySet()) {
-            String word = entry.getKey();
-            Set<Integer> indexes = entry.getValue();
-
-            this.indexedWords.add(String.format("%-25s %s", word, indexes));
-        }
+        indexMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey(this.sortingOrder))
+                .forEach(entry -> {
+                    String formatted = String.format("%-25s %s", entry.getKey(), entry.getValue());
+                    this.indexedWords.add(formatted);
+                });
     }
-
 }
