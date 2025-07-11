@@ -1,5 +1,7 @@
-package resources;
+package object;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,7 +13,7 @@ public class OptionReader {
 	}
 	
 	public static void readOptions() {
-		ResourceBundle rb = ResourceBundle.getBundle("resources.config");
+		ResourceBundle rb = ResourceBundle.getBundle("config");
 		Enumeration<String> keys = rb.getKeys();
 		userOptions = new HashMap<>();
 
@@ -21,16 +23,21 @@ public class OptionReader {
 			userOptions.put(key, value);
 		}
 	}
-	
-	public static Object getObjectFromKey(String keyStr) { 
-		Object kwicObj = null;
-		if (userOptions.containsKey(keyStr)) {
-			String objName;
-			objName = userOptions.get(keyStr);
-			kwicObj = kwicObjLoader.loadObject(objName);
+
+	public static void readOptions(String filePath){
+		Properties properties = new Properties();
+
+		try (FileInputStream fileInputStream = new FileInputStream(filePath)){
+			properties.load(fileInputStream);
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+		userOptions = new HashMap<>();
+		for (String key : properties.stringPropertyNames()) {
+			userOptions.put(key, properties.getProperty(key));
 		}
-		return kwicObj;
-	}
+    }
 	
 	public static Object getObjectFromStr(String objStr) {
 		return kwicObjLoader.loadObject(objStr);
