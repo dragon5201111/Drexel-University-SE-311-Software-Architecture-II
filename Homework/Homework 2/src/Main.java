@@ -23,10 +23,6 @@ public class Main {
     }
 
     public void run(String[] args) {
-        if (args.length < 2) {
-            throw new IllegalArgumentException("You need at least two arguments.");
-        }
-
         String operation = args[0];
         LineStorage lineStorage = getLinePopulatedStorage();
 
@@ -46,6 +42,7 @@ public class Main {
         String inputFileName = OptionReader.getString("InputFileName");
         LineStorage lineStorage = new LineStorage();
         this.input.readLines(inputFileName, lineStorage);
+
         return lineStorage;
     }
 
@@ -77,7 +74,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        OptionReader.readOptions();
+        if (args.length < 2) {
+            throw new IllegalArgumentException("You need at least two arguments.");
+        }
+
+        OptionReader.readOptions(args[args.length - 1]);
 
         Input input = (Input) OptionReader.getObjectFromStr(OptionReader.getString("Input"));
         Output output = (Output) OptionReader.getObjectFromStr(OptionReader.getString("Output"));
