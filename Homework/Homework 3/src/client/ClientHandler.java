@@ -16,8 +16,9 @@ public class ClientHandler {
 
     public void sendLines(List<String> lines) throws IOException, ClassNotFoundException {
         connection.send(new KWICMessage(lines, KWICMethod.INPUT_LINES));
-        KWICMessage response = receiveResponse();
-        System.out.println("Lines stored on server.");
+        // Acknowledge response
+        receiveResponse();
+        System.out.println("Server acknowledged lines.");
     }
 
     public List<String> searchKeyword(String keyword) throws IOException, ClassNotFoundException {

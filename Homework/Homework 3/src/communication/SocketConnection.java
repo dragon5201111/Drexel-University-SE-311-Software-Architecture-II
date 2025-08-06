@@ -13,6 +13,7 @@ public class SocketConnection implements AutoCloseable {
         this.output = new ObjectOutputStream(socket.getOutputStream());
         this.output.flush();
         this.input = new ObjectInputStream(socket.getInputStream());
+        this.socket.setSoTimeout(30000);
     }
 
     public synchronized void send(Object obj) throws IOException {
@@ -22,6 +23,10 @@ public class SocketConnection implements AutoCloseable {
 
     public synchronized Object receive() throws IOException, ClassNotFoundException {
         return input.readObject();
+    }
+
+    public synchronized String getIP() {
+        return socket.getInetAddress().getHostAddress()  + ":" + socket.getPort();
     }
 
     @Override

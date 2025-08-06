@@ -1,9 +1,11 @@
-package client;
+package server;
 
 import communication.KWICMessage;
 import communication.KWICMethod;
 import communication.SocketConnection;
 import line.LineStorage;
+import log.LogLevel;
+import log.Logger;
 import process.KeywordSearch;
 
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class ClientSession implements Runnable {
     @Override
     public void run() {
         try {
+            Logger logger = Logger.getLogger();
+
             while (true) {
                 KWICMessage message = (KWICMessage) connection.receive();
                 if (message == null) break;
@@ -49,6 +53,8 @@ public class ClientSession implements Runnable {
                         System.err.println("Unknown method: " + message.getMethod());
                         break;
                 }
+
+                logger.log(LogLevel.INFO,  this.connection.getIP() + " " + message.getMethod());
             }
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Client disconnected or error: " + e.getMessage());
@@ -57,6 +63,7 @@ public class ClientSession implements Runnable {
                 connection.close();
             } catch (IOException ignored) {}
         }
+
     }
 }
 
