@@ -18,7 +18,7 @@ public class KeywordSearch {
             this.populateKeywords();
         }
 
-        return this.keywords.getOrDefault(keyword.toLowerCase(), List.of(String.format("[%s] not found", keyword)));
+        return this.keywords.getOrDefault(keyword.toLowerCase(), new ArrayList<>());
     }
 
     private void populateKeywords() {

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class KWICClient implements AutoCloseable {
     private final SocketConnection connection;
@@ -20,22 +19,24 @@ public class KWICClient implements AutoCloseable {
     }
 
     public void run() throws IOException, ClassNotFoundException {
+        handler.sendInitialLines();
+
         BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-
-        System.out.println("Enter lines (empty line to finish):");
-        List<String> lines = consoleReader.lines()
-                .takeWhile(line -> !line.isEmpty())
-                .collect(Collectors.toList());
-
-        handler.sendLines(lines);
-
         while (true) {
-            System.out.print("Enter keyword to search (or 'exit' to quit): ");
+            System.out.print("Enter keyword to search or 'exit' to quit: ");
             String keyword = consoleReader.readLine();
-            if ("exit".equalsIgnoreCase(keyword)) break;
+
+            if ("exit".equalsIgnoreCase(keyword)){
+                break;
+            }
 
             List<String> results = handler.searchKeyword(keyword);
-            System.out.println("Results:");
+
+            String searchResult = results.isEmpty()
+                    ? String.format("[%s] keyword not found", keyword)
+                    : String.format("%d sentence(s) found", results.size());
+
+            System.out.println(searchResult);
             results.forEach(System.out::println);
         }
 
