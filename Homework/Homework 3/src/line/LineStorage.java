@@ -7,8 +7,9 @@ public class LineStorage {
     private final List<List<String>> lineWords;
     private String wordDelimiter;
 
-    public LineStorage() {
+    public LineStorage(String wordDelimiter) {
         this.lineWords = new ArrayList<>();
+        this.wordDelimiter = wordDelimiter;
     }
 
     public int getLineCount() {
@@ -30,8 +31,16 @@ public class LineStorage {
         return this.lineWords.get(lineNumber).get(wordIndex);
     }
 
-    public void setWordDelimiter(String wordDelimiter) {
-        this.wordDelimiter = wordDelimiter;
+    public void addLine(int lineNumber, String line) {
+        for (String word : line.split(this.wordDelimiter)) {
+            this.addWord(lineNumber, word);
+        }
+    }
+
+    public void setLines(List<String> lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            this.addLine(i, lines.get(i));
+        }
     }
 
     public String getLine(int lineNumber) {

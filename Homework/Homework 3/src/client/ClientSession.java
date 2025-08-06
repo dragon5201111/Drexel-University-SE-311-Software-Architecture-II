@@ -1,0 +1,62 @@
+package client;
+
+import communication.KWICMessage;
+import communication.KWICMethod;
+import communication.SocketConnection;
+import line.LineStorage;
+import process.KeywordSearch;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.util.List;
+
+public class ClientSession implements Runnable {
+    private final SocketConnection connection;
+    private final LineStorage lineStorage;
+    private final KeywordSearch keywordSearch;
+
+    public ClientSession(Socket socket) throws IOException {
+        this.connection = new SocketConnection(socket);
+        this.lineStorage = new LineStorage(" ");
+        this.keywordSearch = new KeywordSearch(lineStorage);
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                KWICMessage message = (KWICMessage) connection.receive();
+                if (message == null) break;
+
+                switch (message.getMethod()) {
+                    case INPUT_LINES:
+                        List<String> lines = message.getMessage();
+                        lineStorage.setLines(lines);
+                        connection.send(new KWICMessage(null, KWICMethod.RESPONSE));
+                        break;
+
+                    case KEYWORD_SEARCH:
+                        String keyword = (String) connection.receive();
+                        List<String> results = keywordSearch.getKeywordLines(keyword);
+                        connection.send(new KWICMessage(results, KWICMethod.RESPONSE));
+                        break;
+
+                    case CLOSE:
+                        connection.close();
+                        return;
+
+                    default:
+                        System.err.println("Unknown method: " + message.getMethod());
+                        break;
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Client disconnected or error: " + e.getMessage());
+        } finally {
+            try {
+                connection.close();
+            } catch (IOException ignored) {}
+        }
+    }
+}
+

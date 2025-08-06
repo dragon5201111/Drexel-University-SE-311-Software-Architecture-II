@@ -1,49 +1,42 @@
 package server;
 
+import client.ClientSession;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class KWICServer implements AutoCloseable {
-    private final ExecutorService pool;
-    private ServerSocket server;
+public class KWICServer {
     private final int port;
-    private boolean acceptConnections;
+    private final ExecutorService clientPool;
 
     public KWICServer(int port) {
-        this.server = null;
         this.port = port;
-        this.pool = Executors.newCachedThreadPool();
-        this.acceptConnections = true;
+        this.clientPool = Executors.newCachedThreadPool();
     }
 
-    public void start() throws IOException {
-        // Bind to localhost
-        this.server = new ServerSocket(port);
+    public void start() {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("KWIC Server listening on port " + port);
 
-        while (this.acceptConnections) {
-            Socket clientSocket = server.accept();
-            this.pool.execute(new ClientHandler(clientSocket));
-            clientSocket.close();
-        }
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Accepted connection from " + clientSocket.getRemoteSocketAddress());
 
-    }
-
-    @Override
-    public void close() throws Exception {
-        if (this.server != null) {
-            this.acceptConnections = false;
-            this.server.close();
+                ClientSession session = new ClientSession(clientSocket);
+                clientPool.execute(session);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            clientPool.shutdown();
         }
     }
 
     public static void main(String[] args) {
-        try (KWICServer kwicServer = new KWICServer(9090)){
-            kwicServer.start();
-        }catch (Exception e){
-            throw  new RuntimeException(e);
-        }
+        new KWICServer(9090).start();
     }
 }
+
