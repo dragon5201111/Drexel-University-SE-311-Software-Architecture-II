@@ -9,7 +9,6 @@ import log.Logger;
 import process.KeywordSearch;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.List;
 
 public class ClientSession implements Runnable {
@@ -17,8 +16,8 @@ public class ClientSession implements Runnable {
     private final LineStorage lineStorage;
     private final KeywordSearch keywordSearch;
 
-    public ClientSession(Socket socket) throws IOException {
-        this.connection = new SocketConnection(socket);
+    public ClientSession(SocketConnection connection) throws IOException {
+        this.connection = connection;
         this.lineStorage = new LineStorage(" ");
         this.keywordSearch = new KeywordSearch(lineStorage);
     }

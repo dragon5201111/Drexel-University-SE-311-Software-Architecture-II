@@ -1,5 +1,7 @@
 package server;
 
+import communication.SocketConnection;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,7 +25,7 @@ public class KWICServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Accepted connection from " + clientSocket.getRemoteSocketAddress());
 
-                ClientSession session = new ClientSession(clientSocket);
+                ClientSession session = new ClientSession(new SocketConnection(clientSocket));
                 clientPool.execute(session);
             }
         } catch (IOException e) {
