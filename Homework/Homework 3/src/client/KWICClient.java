@@ -1,6 +1,5 @@
 package client;
 
-import communication.SocketConnection;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.List;
+
+import communication.SocketConnection;
 
 public class KWICClient implements AutoCloseable {
     private final SocketConnection connection;
@@ -20,7 +21,6 @@ public class KWICClient implements AutoCloseable {
     }
 
     public void run() throws IOException, ClassNotFoundException {
-        handler.sendInitialLines();
 
         BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
         while (true) {

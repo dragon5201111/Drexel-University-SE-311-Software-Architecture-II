@@ -12,6 +12,10 @@ public class LineStorage {
         this.wordDelimiter = wordDelimiter;
     }
 
+    public LineStorage() {
+        this.lineWords = new ArrayList<>();
+    }
+
     public int getLineCount() {
         return this.lineWords.size();
     }

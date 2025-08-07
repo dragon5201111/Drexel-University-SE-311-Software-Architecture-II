@@ -1,7 +1,2 @@
-Dogs are fun. Dogs are cool. Dogs
-Software architecture
-SE311 is okay
-I like to program
-I love my dogs. I take my dogs for many walks.
-se311 is a fun class.
-Dogs are great pets.
+Dogs are fun
+software d
