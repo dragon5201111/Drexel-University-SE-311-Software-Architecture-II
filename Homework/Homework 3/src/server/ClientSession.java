@@ -27,6 +27,7 @@ public class ClientSession implements Runnable {
         try {
             Logger logger = Logger.getLogger();
 
+
             while (true) {
                 KWICMessage message = (KWICMessage) connection.receive();
                 if (message == null) break;

@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 public class KWICClient implements AutoCloseable {
@@ -14,7 +15,7 @@ public class KWICClient implements AutoCloseable {
 
     public KWICClient(String ip, int port) throws IOException {
         Socket socket = new Socket(ip, port);
-        this.connection = new SocketConnection(socket);
+        this.connection = new SocketConnection(socket, true);
         this.handler = new ClientHandler(connection);
     }
 
@@ -51,7 +52,11 @@ public class KWICClient implements AutoCloseable {
     public static void main(String[] args) {
         try (KWICClient client = new KWICClient("127.0.0.1", 9090)) {
             client.run();
-        } catch (Exception e) {
+        }catch (SocketTimeoutException e){
+            System.out.println("The KWIC server is not responding.");
+            System.out.println("Exiting...");
+        }
+        catch (Exception e) {
            throw new RuntimeException(e);
         }
     }

@@ -8,11 +8,15 @@ public class SocketConnection implements AutoCloseable {
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
 
-    public SocketConnection(Socket socket) throws IOException {
+    public SocketConnection(Socket socket, boolean timeout) throws IOException {
         this.socket = socket;
         this.output = new ObjectOutputStream(socket.getOutputStream());
         this.output.flush();
         this.input = new ObjectInputStream(socket.getInputStream());
+
+        if (timeout) {
+            this.socket.setSoTimeout(30000);
+        }
     }
 
     public synchronized void send(Object obj) throws IOException {
